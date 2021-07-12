@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>
+
+
+      <datalist id="notetype">
+       <option value="直连">
+       <option value="网管子设备">
+       <option value="网关设备">
+      </datalist>
+      <datalist id="link">
+        <option value="Wi-Fi">
+        <option value="2/3/4/5G">
+        <option value="以太网">
+      </datalist>
+
+
+</head>
+<body>
+    <div id="login">
+        <h1>{{ show_user }},创建产品</h1>
+        <form action="/createproduct/createdata" method="post">
+            {% csrf_token %}
+            <input style="display:none" name="user" value="{{ show_user }}">
+            <input type="text" required="required" placeholder="产品名称" name="pname">
+            <input type="text" required="required" placeholder="所属类型" name="type">
+
+            <input list="notetype"placeholder="节点类型" name="note">
+
+            <input list="link" placeholder="连接方式" name="linkvalue">
+
+            <input type="text" required="required" value="Json" name="dataformat" readonly="readonly">
+            <input type="text" required="required" value="设备密钥" name="authentication" readonly="readonly">
+            <input type="text" required="required" placeholder="设备描述" name="describe">
+            <button class="but" type="submit">注册</button>
+        </form>
+    </div>
+</body>
+</html>

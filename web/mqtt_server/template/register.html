@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>
+
+
+</head>
+<body>
+    <div id="login">
+        <h1>新用户注册</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" required="required" placeholder="用户名" name="user">
+            <input type="password" required="required" placeholder="密码" name="password">
+            <input type="password" required="required" placeholder="确认密码" name="checkpassword">
+            <input type="text" required="required" placeholder="电话" name="tel">
+            <input type="text" required="required" placeholder="公司" name="company">
+            <input type="textarea" required="required" placeholder="其他" name="other">
+            <input type="text" required="required" placeholder="验证码:{{ check }}" name="check">
+            <button class="but" type="submit">确认创建</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Basic -->
+  {% load static %}
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>设备详情</title>
+  <style type="text/css">
+    #all_light {
+        opaction: 0.8;
+        width: 100%;
+        hright: 2300px;
+        background: #000000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        z-index: 2;
+    }
+    #contes{
+        width: 500px;
+        height: 500px;
+        background: #ffffff;
+        display: none;
+        z-index: 2;
+        position: absolute;
+        top: 100px;
+        left: 400px;
+    }
+    input{
+          margin-bottom: 10px;
+      }
+
+  </style>
+
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="../../../static/css/bootstrap.css" />
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="../../../static/css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="../../../static/css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="hero_area">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="#">
+            <span>
+              用户管理
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+              <ul class="navbar-nav  ">
+                <li class="nav-item active">
+                  <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="job.html"> Jobs </a>
+                </li>
+              </ul>
+              <form class="form-inline  ml-0 ml-lg-4 ">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+              </form>
+              <ul class="user_option navbar-nav">
+                <li class="nav-item">
+
+                  <a class="nav-link" > <img src="../../../static/images/login.png" alt=""> <span>{{ show_user }}</span>  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/"> <img src="../../../static/images/register.png" alt="">
+                    <span>退出</span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+          <br />
+          <br />
+          <h4><font color="#fffaf0">设备信息</font></h4>
+          <a > <font color="#fffaf0">设备信息：{{ d_name }}&ensp;&ensp;状态：{{ d_stats }}
+          </font>
+          </a>
+          <br />
+          <br />
+          <button onclick="add()">创建节点</button>
+
+
+
+          <div id="contes" style="">
+              <div style="width: 500px;height: 10px;">
+                  添加
+                  <hr>
+                  <form style=" margin-left: 10px" method="post">
+                      {% csrf_token %}
+                      节点名：<input type="text" name="topic_name"><br/><br/>
+                      value：&ensp;<input type="text" name="t_dataname"><br/><br/>
+                      权限&ensp;&ensp;：<input type="text" value="订阅/发布" name="pe"><br/><br/>
+                      <input style="display:none" name="username" value="{{ show_user }}">
+                      <input style="display:none" name="product" value="{{ productname }}">
+                      <br/>
+                      <input type="submit" value="提交">
+              </div>
+
+          </div>
+
+      </div>
+
+    </header>
+    <body>
+       <dev>
+           <br />
+           <a> <font color="#fffaf0">&ensp;&ensp;&ensp;Topic列表 </font></a>
+
+            <br />
+            <br />
+            {% for show in list_topic %}
+                <li><a>&ensp;&ensp;&ensp;&ensp;<font color="#fffaf0">{{show.T_Name}} &ensp;&ensp;&ensp; {{show.T_Dir}}&ensp;
+                    &ensp;&ensp;&ensp;&ensp;{{ show.T_Permission }}&ensp;&ensp;&ensp;&ensp;{{ show.T_DataName }}
+                    &ensp;&ensp;&ensp;&ensp;{{ show.T_Data }}
+                    </font></a></li>
+                <br />
+
+            {% endfor %}
+
+
+       </dev>
+
+    <div id="all_light">
+    </div>
+        <script>
+        function add() {
+            document.getElementById('all_light').style.display='block';
+            document.getElementById('contes').style.display='block';
+        }
+    </script>
+    <meta http-equiv="refresh" content="3">
+    </body>
+    <!-- end header section -->
+    <!-- slider section -->
+
+
+</html>

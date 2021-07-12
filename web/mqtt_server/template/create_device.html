@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/login.css"/>
+
+
+      <datalist id="notetype">
+       <option value="直连">
+       <option value="网管子设备">
+       <option value="网关设备">
+      </datalist>
+      <datalist id="link">
+        <option value="Wi-Fi">
+        <option value="2/3/4/5G">
+        <option value="以太网">
+      </datalist>
+
+
+</head>
+<body>
+    <div id="login">
+        <h1>{{ show_user }},创建设备</h1>
+        <form action="creatediviceinfo" method="post">
+            {% csrf_token %}
+            <input style="display:none" name="user" value="{{ show_user }}">
+            <input type="text" required="required" placeholder="设备名字" name="devicename">
+            <input type="text" required="required" placeholder="设备描述" name="describe">
+            <input type="text" required="required" placeholder="ProductKey" name="productkey">
+            <input style="display:none" name="product" value="{{ productname }}">
+            <input style="display:none" name="username" value="{{ show_user }}">
+            <button class="but" type="submit">添加设备</button>
+        </form>
+    </div>
+</body>
+</html>
