@@ -1,0 +1,8 @@
+run_erl [9245] Mon Jul 12 17:11:41 2021
+Args before exec of shell:
+run_erl [9245] Mon Jul 12 17:11:41 2021
+argv[0] = sh
+run_erl [9245] Mon Jul 12 17:11:41 2021
+argv[1] = -c
+run_erl [9245] Mon Jul 12 17:11:41 2021
+argv[2] = exec "/Users/zhaolc/Desktop/server/clude_server/emqx_mac/bin/emqx" "console"

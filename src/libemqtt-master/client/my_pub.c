@@ -4,7 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <linux/tcp.h>
+#include <sys/socket.h>
+#include <netinet/tcp.h>
 #define CLIENT_ID "admin"
 #define PWD       "admin"
 #define RCVBUFSIZE 1024

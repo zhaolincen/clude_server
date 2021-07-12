@@ -1,0 +1,118 @@
+%%-*- mode: erlang -*-
+%% emqx_backend_influxdb config mapping
+
+{mapping, "backend.influxdb.udp.$name.server", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.udp.$name.pool_size", "emqx_backend_influxdb.pools", [
+  {default, 8},
+  {datatype, integer}
+]}.
+
+{mapping, "backend.influxdb.http.$name.server", "emqx_backend_influxdb.pools", [
+{default, "127.0.0.1:8086"},
+{datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.pool_size", "emqx_backend_influxdb.pools", [
+  {default, 8},
+  {datatype, integer}
+]}.
+
+{mapping, "backend.influxdb.http.$name.database", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.username", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.password", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.precision", "emqx_backend_influxdb.pools", [
+  {default, ms},
+  {datatype, {enum, [ns, us, ms, s, m, h]}}
+]}.
+
+{mapping, "backend.influxdb.http.$name.https_enabled", "emqx_backend_influxdb.pools", [
+  {default, false},
+  {datatype, {enum, [true, false]}}
+]}.
+
+{mapping, "backend.influxdb.http.$name.ssl.version", "emqx_backend_influxdb.pools", [
+  {default, 'tlsv1.2'},
+  {datatype, {enum, ['tlsv1.3', 'tlsv1.2', 'tlsv1.1', 'tlsv1']}}
+]}.
+
+{mapping, "backend.influxdb.http.$name.ssl.keyfile", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.ssl.certfile", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{mapping, "backend.influxdb.http.$name.ssl.cacertfile", "emqx_backend_influxdb.pools", [
+  {datatype, string}
+]}.
+
+{translation, "emqx_backend_influxdb.pools",
+  fun(Conf) ->
+    Pools = [Pool || {["backend", "influxdb", _, Pool | _], _} <- cuttlefish_variable:filter_by_prefix("backend.influxdb", Conf)],
+    ListMapFunction = fun(Pool) ->
+                        HttpOptsFun = fun(Key) ->
+                                        KeyFullName = string:join(["backend.influxdb.http", Pool, Key], "."),
+                                        cuttlefish:conf_get(KeyFullName, Conf, undefined)
+                                      end,
+                        UdpOptsFun = fun(Key) ->
+                                       KeyFullName = string:join(["backend.influxdb.udp", Pool, Key], "."),
+                                       cuttlefish:conf_get(KeyFullName, Conf, undefined)
+                                     end,
+                        Opts = case UdpOptsFun("server") of
+                          undefined ->
+                            Server = HttpOptsFun("server"),
+                            [Host,  Port] = string:tokens(Server, ":"),
+                            [{protocol, http},
+                             {host, Host},
+                             {port,  list_to_integer(Port)},
+                             {pool_size, HttpOptsFun("pool_size")},
+                             {username, HttpOptsFun("username")},
+                             {password, HttpOptsFun("password")},
+                             {database, HttpOptsFun("database")},
+                             {precision, atom_to_list(HttpOptsFun("precision"))}] ++
+                             case HttpOptsFun("https_enabled") of
+                               true ->
+                                 [{versions, HttpOptsFun("ssl.version")},
+                                  {keyfile, HttpOptsFun("ssl.keyfile")},
+                                  {certfile, HttpOptsFun("ssl.certfile")},
+                                  {cacertfile, HttpOptsFun("ssl.cacertfile")}];
+                               _ ->
+                                 []
+                             end;
+                          Server ->
+                            [Host, Port] = string:tokens(Server, ":"),
+                            [{protocol, udp},
+                             {host, Host},
+                             {port, list_to_integer(Port)},
+                             {pool_size, UdpOptsFun("pool_size")}]
+                        end,
+                        Filter = fun(Opts) -> [{K, V} || {K, V} <- Opts, V =/= undefined] end,
+                        {list_to_atom(Pool), Filter(Opts)}
+                      end,
+    lists:map(ListMapFunction, lists:usort(Pools))
+  end}.
+
+{mapping, "backend.influxdb.hook.message.publish.$name", "emqx_backend_influxdb.hooks", [
+  {datatype, string}
+]}.
+
+{translation, "emqx_backend_influxdb.hooks", fun(Conf) ->
+  Hooks = cuttlefish_variable:filter_by_prefix("backend.influxdb.hook", Conf),
+  lists:map(
+    fun({[_, _, _, Name1, Name2, _], Val}) ->
+      {lists:concat([Name1, ".", Name2]), list_to_binary(Val)}
+  end, Hooks)
+end}.
